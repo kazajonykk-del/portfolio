@@ -2,7 +2,7 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Azizbek | Next-Gen Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
@@ -14,67 +14,42 @@
             font-family: 'Space Grotesk', sans-serif;
             background-color: #050505;
             color: white;
-            cursor: none;
             overflow-x: hidden;
-        }
-
-        /* Progres Bar */
-        #progress-container {
-            position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 4px;
-            z-index: 1000;
-        }
-        #progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #3b82f6, #ec4899);
-            width: 0%;
         }
 
-        /* Yangi Kursor Effekti */
+        /* Desktop uchun kursor, mobileda yashiriladi */
+        @media (min-width: 1024px) {
+            body { cursor: none; }
+            .cursor-main, .cursor-follower { display: block; }
+        }
+        @media (max-width: 1023px) {
+            .cursor-main, .cursor-follower { display: none; }
+        }
+
         .cursor-follower {
             position: fixed;
-            width: 30px;
-            height: 30px;
+            width: 30px; height: 30px;
             background: rgba(59, 130, 246, 0.3);
             border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
-            transition: transform 0.1s ease, background 0.3s ease, width 0.3s ease, height 0.3s ease;
-            mix-blend-mode: difference; /* Matnlar ustida rangini o'zgartiradi */
+            mix-blend-mode: difference;
         }
 
         .cursor-main {
             position: fixed;
-            width: 8px;
-            height: 8px;
+            width: 8px; height: 8px;
             background: #3b82f6;
             border-radius: 50%;
             pointer-events: none;
             z-index: 10000;
         }
 
-        /* Elementga tekandagi holat */
-        .cursor-active {
-            width: 80px;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid white;
-        }
-
         .glass-card {
             background: rgba(255, 255, 255, 0.02);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        .glass-card:hover {
-            background: rgba(59, 130, 246, 0.05);
-            border-color: #3b82f6;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
 
         .gradient-text {
@@ -83,111 +58,92 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Loyiha kartalari uchun rasm effekti */
-        .project-img {
-            transition: transform 0.8s scale;
+        /* Mobile Menu Animation */
+        #mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .group:hover .project-img {
-            transform: scale(1.1) rotate(2deg);
+        #mobile-menu.active {
+            transform: translateX(0);
         }
     </style>
 </head>
 <body>
 
-    <!-- Progress Bar -->
-    <div id="progress-container">
-        <div id="progress-bar"></div>
-    </div>
-
-    <!-- Yangilangan Custom Cursor -->
     <div class="cursor-main"></div>
     <div class="cursor-follower"></div>
 
-    <!-- Navigation -->
     <nav class="fixed w-full z-[100] px-6 py-4 flex justify-between items-center backdrop-blur-xl border-b border-white/5">
-        <div class="text-2xl font-bold tracking-tighter">F1AA77<span class="text-blue-500">.</span></div>
+        <div class="text-2xl font-bold tracking-tighter">AZIZBEK<span class="text-blue-500">.</span></div>
+        
         <div class="hidden md:flex gap-10 text-sm font-medium uppercase tracking-widest">
-            <a href="#home" class="nav-link hover:text-blue-500 transition">Asosiy</a>
-            <a href="project.html" class="nav-link hover:text-blue-500 transition">Loyihalar</a>
-            <a href="contact.html" class="nav-link hover:text-blue-500 transition">Kontakt</a>
+            <a href="#home" class="hover:text-blue-500 transition">Asosiy</a>
+            <a href="projects.html" class="hover:text-blue-500 transition">Loyihalar</a>
+            <a href="contact.html" class="hover:text-blue-500 transition">Kontakt</a>
         </div>
+
         <div class="flex items-center gap-4">
-            <button id="theme-toggle" class="p-2 glass-card rounded-full text-lg">🌓</button>
-           <a href="contact.html"> <button class="bg-blue-600 px-6 py-2 rounded-full text-xs font-bold hover:scale-105 transition active:scale-95">ALOQA</button></a>
+            <a href="contact.html" class="hidden sm:block bg-blue-600 px-6 py-2 rounded-full text-xs font-bold hover:scale-105 transition">ALOQA</a>
+            <button id="menu-btn" class="md:hidden text-2xl">☰</button>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="home" class="min-h-screen flex items-center justify-center pt-20 px-6 relative overflow-hidden">
-        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full animate-pulse"></div>
-        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/10 blur-[120px] rounded-full animate-pulse"></div>
+    <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[150] flex flex-col items-center justify-center gap-8 md:hidden">
+        <button id="close-btn" class="absolute top-6 right-6 text-3xl">✕</button>
+        <a href="#home" class="text-3xl font-bold mobile-link">Asosiy</a>
+        <a href="projects.html" class="text-3xl font-bold mobile-link">Loyihalar</a>
+        <a href="contact.html" class="text-3xl font-bold mobile-link">Kontakt</a>
+        <div class="mt-10">
+            <a href="contact.html" class="bg-blue-600 px-10 py-4 rounded-full font-bold">Aloqaga chiqish</a>
+        </div>
+    </div>
 
-        <div class="container mx-auto grid md:grid-cols-2 gap-12 items-center relative z-10">
-            <div data-aos="fade-right">
-                <h2 class="text-blue-500 font-bold tracking-[0.5em] mb-4">AZIZBEK FAYZULLAYEV</h2>
-                <h1 class="text-6xl md:text-8xl font-bold mb-6">Men <br><span class="gradient-text" id="typewriter"></span></h1>
-                <p class="text-gray-400 text-lg mb-10 max-w-md leading-relaxed">
+    <section id="home" class="min-h-screen flex items-center justify-center pt-32 pb-20 px-6 relative overflow-hidden">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div data-aos="fade-right" class="text-center md:text-left order-2 md:order-1">
+                <h2 class="text-blue-500 font-bold tracking-[0.3em] mb-4 text-sm md:text-base">AZIZBEK FAYZULLAYEV</h2>
+                <h1 class="text-5xl md:text-8xl font-bold mb-6">Men <br><span class="gradient-text" id="typewriter"></span></h1>
+                <p class="text-gray-400 text-base md:text-lg mb-10 max-w-md mx-auto md:mx-0 leading-relaxed">
                     Murakkab g'oyalarni raqamli haqiqatga aylantiruvchi 
                     <span class="text-white border-b border-blue-500">Full-stack dasturchi</span>.
                 </p>
-                <div class="flex gap-6">
-                    <button class="bg-white text-black px-8 py-4 rounded-full font-bold hover:bg-blue-500 hover:text-white transition-all">Loyihalar</button>
-                    <button class="glass-card px-8 py-4 rounded-full font-bold">CV Yuklash</button>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                    <a href="project.html" class="bg-white text-black px-8 py-4 rounded-full font-bold text-center">Ishlarim</a>
+                    <button class="glass-card px-8 py-4 rounded-full font-bold">Ijtimoyiy tarmoqlar</button>
                 </div>
             </div>
 
-            <div class="relative" data-aos="zoom-in">
-                <div class="rounded-[60px] overflow-hidden border border-white/10 shadow-2xl relative z-10">
-                    <img src="20260321_125449.jpg" alt="Azizbek" class="w-full h-[500px] object-cover hover:scale-105 transition duration-700">
+            <div class="relative order-1 md:order-2" data-aos="zoom-in">
+                <div class="rounded-[40px] md:rounded-[60px] overflow-hidden border border-white/10 relative z-10 mx-auto max-w-[350px] md:max-w-none">
+                    <img src="20260321_125449.jpg" alt="Azizbek" class="w-full h-[400px] md:h-[600px] object-cover">
                 </div>
-                <div class="absolute -bottom-6 -left-6 glass-card p-6 rounded-3xl z-20">
-                    <p class="text-blue-500 font-bold text-xl">50+</p>
-                    <p class="text-[10px] text-gray-400 uppercase">Muvaffaqiyatli Botlar</p>
+                <div class="absolute -bottom-4 -right-4 md:-bottom-6 md:-left-6 glass-card p-4 md:p-6 rounded-3xl z-20">
+                    <p class="text-blue-500 font-bold text-xl md:text-2xl">50+</p>
+                    <p class="text-[10px] text-gray-400 uppercase tracking-widest">Botlar</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Projects -->
-    <section id="projects" class="py-32 px-6">
+    <section id="projects" class="py-20 px-6">
         <div class="container mx-auto">
-            <h2 class="text-5xl font-bold mb-16" data-aos="fade-up">Tanlangan loyihalar</h2>
-            <div class="grid md:grid-cols-2 gap-12">
-                <!-- Olcha Cafe -->
-                <div class="glass-card rounded-[40px] p-8 group" data-aos="fade-up">
-                    <div class="h-80 bg-zinc-900 rounded-[30px] mb-8 overflow-hidden">
-                        <div class="w-full h-full bg-gradient-to-tr from-blue-900/40 to-transparent flex items-center justify-center">
-                           <span class="text-4xl opacity-20">Olcha Cafe App</span>
-                        </div>
-                    </div>
-                    <h3 class="text-2xl font-bold mb-4">Olcha Cafe Dashboard</h3>
-                    <p class="text-gray-500 mb-6">Restoranlar uchun avtomatlashtirilgan boshqaruv tizimi va raqamli menyu.</p>
-                    <div class="flex gap-2">
-                        <span class="px-4 py-1 rounded-full border border-white/10 text-xs">PHP</span>
-                        <span class="px-4 py-1 rounded-full border border-white/10 text-xs">MySQL</span>
-                        <span class="px-4 py-1 rounded-full border border-white/10 text-xs">Tailwind</span>
-                    </div>
+            <h2 class="text-4xl md:text-6xl font-bold mb-12 text-center md:text-left">Loyihalar</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="glass-card rounded-[35px] p-6" data-aos="fade-up">
+                    <div class="h-48 md:h-64 bg-zinc-900 rounded-[25px] mb-6 flex items-center justify-center text-3xl opacity-20">WEB APP</div>
+                    <h3 class="text-xl font-bold mb-2">Olcha Cafe</h3>
+                    <p class="text-gray-500 text-sm">Dashboard va raqamli menyu tizimi.</p>
                 </div>
-
-                <!-- Attendance Bot -->
-                <div class="glass-card rounded-[40px] p-8 group" data-aos="fade-up" data-aos-delay="200">
-                    <div class="h-80 bg-zinc-900 rounded-[30px] mb-8 overflow-hidden">
-                        <div class="w-full h-full bg-gradient-to-tr from-purple-900/40 to-transparent flex items-center justify-center">
-                            <span class="text-4xl opacity-20">Telegram Bot</span>
-                        </div>
-                    </div>
-                    <h3 class="text-2xl font-bold mb-4">Attendance Bot</h3>
-                    <p class="text-gray-500 mb-6">O'quv markazlari va maktablar uchun davomatni Telegram orqali nazorat qilish.</p>
-                    <div class="flex gap-2">
-                        <span class="px-4 py-1 rounded-full border border-white/10 text-xs">Python</span>
-                        <span class="px-4 py-1 rounded-full border border-white/10 text-xs">Aiogram</span>
-                    </div>
+                <div class="glass-card rounded-[35px] p-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="h-48 md:h-64 bg-zinc-900 rounded-[25px] mb-6 flex items-center justify-center text-3xl opacity-20">TG BOT</div>
+                    <h3 class="text-xl font-bold mb-2">Attendance Bot</h3>
+                    <p class="text-gray-500 text-sm">Avtomatlashtirilgan davomat tizimi.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
+ <!-- Footer -->
     <footer id="contact" class="py-20 border-t border-white/5 bg-zinc-950">
         <div class="container mx-auto px-6 text-center">
             <h2 class="text-4xl md:text-6xl font-bold mb-12">G'oyangizni birgalikda <br> <span class="text-blue-500">kodga aylantiramiz</span></h2>
@@ -207,55 +163,39 @@
     <script>
         AOS.init({ duration: 1000, once: true });
 
-        // Scroll Progress
-        window.onscroll = function() {
-            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            let scrolled = (winScroll / height) * 100;
-            document.getElementById("progress-bar").style.width = scrolled + "%";
-        };
+        // Mobile Menu Logic
+        const menuBtn = document.getElementById('menu-btn');
+        const closeBtn = document.getElementById('close-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        menuBtn.onclick = () => mobileMenu.classList.add('active');
+        closeBtn.onclick = () => mobileMenu.classList.remove('active');
+        mobileLinks.forEach(link => {
+            link.onclick = () => mobileMenu.classList.remove('active');
+        });
 
         // Typewriter
         new Typed('#typewriter', {
-            strings: ['Azizbek', 'Dasturchi', 'YouTuber', 'Bot Creator'],
+            strings: ['Azizbek', 'Dasturchi', 'Bot Creator'],
             typeSpeed: 60,
             backSpeed: 40,
             loop: true
         });
 
-        // Advanced Cursor
-        const mainCursor = document.querySelector('.cursor-main');
-        const follower = document.querySelector('.cursor-follower');
-        
-        window.addEventListener('mousemove', (e) => {
-            mainCursor.style.left = e.clientX + 'px';
-            mainCursor.style.top = e.clientY + 'px';
-            
-            follower.animate({
-                left: e.clientX - 15 + 'px',
-                top: e.clientY - 15 + 'px'
-            }, { duration: 400, fill: "forwards" });
-        });
-
-        // Hover efektlari
-        const interactiveElements = document.querySelectorAll('a, button, .glass-card, img');
-        interactiveElements.forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                follower.classList.add('cursor-active');
+        // Kursor faqat katta ekranlarda
+        if (window.innerWidth >= 1024) {
+            const mainCursor = document.querySelector('.cursor-main');
+            const follower = document.querySelector('.cursor-follower');
+            window.addEventListener('mousemove', (e) => {
+                mainCursor.style.left = e.clientX + 'px';
+                mainCursor.style.top = e.clientY + 'px';
+                follower.animate({
+                    left: e.clientX - 15 + 'px',
+                    top: e.clientY - 15 + 'px'
+                }, { duration: 400, fill: "forwards" });
             });
-            el.addEventListener('mouseleave', () => {
-                follower.classList.remove('cursor-active');
-            });
-        });
-
-        // Theme Toggle (Sodda variant)
-        const themeBtn = document.getElementById('theme-toggle');
-        themeBtn.addEventListener('click', () => {
-            document.body.style.backgroundColor = 
-                document.body.style.backgroundColor === 'rgb(255, 255, 255)' ? '#050505' : '#fff';
-            document.body.style.color = 
-                document.body.style.color === 'black' ? 'white' : 'black';
-        });
+        }
     </script>
 </body>
 </html>
