@@ -1,7 +1,27 @@
 import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo, ReplyKeyboardMarkup, KeyboardButton
+import threading
+import time
+import requests
 
-# Sening Bot Tokening va Telegram ID'ing
+# =====================================================================
+# 🌐 SERVER REJIMIDA BOTNI 24/7 UYQOQ TUTISH UCHUN FUNKSIYA
+# =====================================================================
+def keep_alive():
+    while True:
+        try:
+            # Bot serverda o'chib qolmasligi uchun har 10 daqiqada tarmoqqa so'rov yuboradi
+            requests.get("https://google.com")
+        except Exception as e:
+            print(f"Keep-alive xatosi: {e}")
+        time.sleep(600)  # 600 soniya = 10 daqiqa
+
+# Fondagi uyg'otuvchi tizimni ishga tushirish
+threading.Thread(target=keep_alive, daemon=True).start()
+
+# =====================================================================
+# ⚙️ BOT SOZLAMALARI VA TOKENDAR
+# =====================================================================
 API_TOKEN = '8877192617:AAGKNS5OJoPtdO3f8uZawoHLt1s07G-1Gd0'
 ADMIN_ID = 8608832630  # Sening shaxsiy ID'ing, buyurtmalar shu yerga keladi
 
@@ -28,13 +48,13 @@ def main_menu():
     return markup
 
 # =====================================================================
-# ⚡️ YANGI QISM: PROFILINGGA ODAMLAR YOZGANDA AVTOMATIK JAVOB BERISH
+# ⚡️ KOTIB REJIMI: SHAXSIY PROFILGA YOZILGAN XABARLARGA JAVOB BERISH
 # =====================================================================
 @bot.business_message_handler(func=lambda message: True)
 def handle_business_message(message):
     """ Profilingizga xabar kelganda ishlaydigan aqlli avto-javob """
     chat_id = message.chat.id
-    business_connection_id = message.business_connection_id # Biznes ulanish ID-si
+    business_connection_id = message.business_connection_id  # Biznes ulanish ID-si
     user_name = message.from_user.first_name
 
     auto_text = (
@@ -42,7 +62,7 @@ def handle_business_message(message):
         f"Hozirda Azizbek band bo'lishi mumkin. Men uning sun'iy yordamchisiman. 🤖\n\n"
         f"Agar uning ishlari, portfolio yoki loyihalari bilan qiziqayotgan bo'lsangiz yoki buyurtma bermoqchi bo'lsangiz, "
         f"mening shaxsiy botimga o'tib, to'liq ma'lumot olishingiz mumkin: @{bot.get_me().username}\n\n"
-        f"<i>Xabaringiz Azizbekka yetkazildi, bo'shashi bilan javob yozadi! ✨</i>"
+        f"<i>Xabaringiz Azizbekka yetkazildi, bo'shashi bilan shaxsan o'zi javob yozadi! ✨</i>"
     )
 
     try:
@@ -56,7 +76,7 @@ def handle_business_message(message):
         print(f"Biznes xabar yuborishda xato: {e}")
 
 # =====================================================================
-# ODDY BOT FUNKSIYALARI (Botning o'ziga kirganlar uchun)
+# 🤖 ODDY BOT FUNKSIYALARI (Botning o'ziga kirganlar uchun)
 # =====================================================================
 
 # /start komandasi
